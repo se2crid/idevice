@@ -13,9 +13,9 @@ For help and information, join the [idevice Discord](https://discord.gg/qtgv6QtY
 **IMPORTANT**: Breaking changes will happen at each point release until 0.2.0.
 Pin your `Cargo.toml` to a specific version to avoid breakage.
 
-This library is in development and research stage.
+This library is currently in active development and research stage.
 Releases are being published to crates.io for use in other projects,
-but the API and feature-set are far from final or even planned.
+but the API and feature set are still evolving and not yet finalized.
 
 ## Features
 
@@ -23,26 +23,26 @@ To keep dependency bloat and compile time down, everything is contained in featu
 
 | Feature                | Description |
 |------------------------|-----------------------------------------------------------------------------|
-| `afc`                  | Apple File Conduit for file system access.|
-| `amfi`                 | Apple mobile file integrity service |
+| `afc`                  | Apple File Conduit for file system access. |
+| `amfi`                 | Apple mobile file integrity service. |
 | `core_device_proxy`    | Start a secure tunnel to access protected services. |
-| `crashreportcopymobile`| Copy crash reports.|
-| `debug_proxy`          | Send GDB commands to the device.|
-| `dvt`                  | Access Apple developer tools (e.g. Instruments).|
-| `heartbeat`            | Maintain a heartbeat connection.|
-| `house_arrest` | Manage files in app containers |
-| `installation_proxy`   | Manage app installation and uninstallation.|
-| `springboardservices`  | Control SpringBoard (e.g. UI interactions). Partial support.|
-| `misagent`             | Manage provisioning profiles on the device.|
-| `mobile_image_mounter` | Manage DDI images.|
-| `location_simulation`  | Simulate GPS locations on the device.|
-| `pair`                 | Pair the device.|
-| `syslog_relay` | Relay system logs from the device |
-| `tcp`                  | Connect to devices over TCP.|
-| `tunnel_tcp_stack`     | Naive in-process TCP stack for `core_device_proxy`.|
-| `tss`                  | Make requests to Apple’s TSS servers. Partial support.|
-| `tunneld`              | Interface with [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)’s tunneld. |
-| `usbmuxd`              | Connect using the usbmuxd daemon.|
+| `crashreportcopymobile`| Copy crash reports. |
+| `debug_proxy`          | Send GDB commands to the device. |
+| `dvt`                  | Access Apple developer tools (e.g. Instruments). |
+| `heartbeat`            | Maintain a heartbeat connection. |
+| `house_arrest`         | Manage files in app containers. |
+| `installation_proxy`   | Manage app installation and uninstallation. |
+| `springboardservices`  | Control SpringBoard (e.g. UI interactions). Partial support. |
+| `misagent`             | Manage provisioning profiles on the device. |
+| `mobile_image_mounter` | Manage DDI images. |
+| `location_simulation`  | Simulate GPS locations on the device. |
+| `pair`                 | Pair the device. |
+| `syslog_relay`         | Relay system logs from the device. |
+| `tcp`                  | Connect to devices over TCP. |
+| `tunnel_tcp_stack`     | Naive in-process TCP stack for `core_device_proxy`. |
+| `tss`                  | Make requests to Apple's TSS servers. Partial support. |
+| `tunneld`              | Interface with [pymobiledevice3](https://github.com/doronz88/pymobiledevice3)'s tunneld. |
+| `usbmuxd`              | Connect using the usbmuxd daemon. |
 | `xpc`                  | Access protected services via XPC over RSD. |
 
 ### Planned/TODO
@@ -60,18 +60,18 @@ Implement the following:
 - screenshot
 - webinspector
 
-As this project is done in my free time within my busy schedule, there
-is no ETA for any of these. Feel free to contribute or donate!
+As this project is developed in my free time, there's no specific ETA for these features.
+Contributions and donations are very welcome and help accelerate development!
 
 ## Usage
 
-idevice is purposefully verbose to allow for powerful configurations.
-No size fits all, but effort is made to reduce boilerplate via providers.
+idevice is designed to be explicit and configurable to support powerful use cases.
+While there's no one-size-fits-all solution, we've worked to reduce boilerplate through provider patterns.
 
 ```rust
 // enable the usbmuxd feature
 use idevice::{lockdown::LockdowndClient, IdeviceService};
-use idevice::usbmuxd::{UsbmuxdAddr, UsbmuxdConnection},
+use idevice::usbmuxd::{UsbmuxdAddr, UsbmuxdConnection};
 
 #[tokio::main]
 async fn main() {
@@ -79,7 +79,7 @@ async fn main() {
     // We'll ask usbmuxd for a device
     let mut usbmuxd = UsbmuxdConnection::default()
         .await
-        .expect("Unable to connect to usbmxud")
+        .expect("Unable to connect to usbmuxd");
     let devs = usbmuxd.get_devices().unwrap();
     if devs.is_empty() {
         eprintln!("No devices connected!");
@@ -88,7 +88,7 @@ async fn main() {
 
     // Create a provider to automatically create connections to the device.
     // Many services require opening multiple connections to get where you want.
-    let provider = devs[0].to_provider(UsbmuxdAddr::from_env_var().unwrap(), 0, "example-program")
+    let provider = devs[0].to_provider(UsbmuxdAddr::from_env_var().unwrap(), 0, "example-program");
 
     // ``connect`` takes an object with the provider trait
     let mut lockdown_client = match LockdowndClient::connect(&provider).await {
@@ -116,12 +116,12 @@ async fn main() {
 }
 ```
 
-More examples are in the ``tools`` crate and in the crate documentation.
+More examples are in the [`tools`](tools/) crate and in the crate documentation.
 
 ## FFI
 
 For use in other languages, a small FFI crate has been created to start exposing
-idevice. Example C programs can be found in this repository.
+idevice. Example C programs can be found in the [`ffi/examples`](ffi/examples/) directory.
 
 ## Version Policy
 
@@ -132,7 +132,7 @@ not keep compatibility for older versions than the current stable release.
 
 doronz88 is kind enough to maintain a [repo](https://github.com/doronz88/DeveloperDiskImage)
 for disk images and personalized images.
-On MacOS, you can find them at ``~/Library/Developer/DeveloperDiskImages``.
+On macOS, you can find them at `~/Library/Developer/DeveloperDiskImages`.
 
 ## License
 
